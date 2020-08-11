@@ -9,6 +9,7 @@ import GerenciadorDeTarefas.GerenciadorInterfaceGrafica;
 import GerenciadorDeTarefas.Uteis;
 import Modelos.Servico;
 import java.awt.Color;
+import java.text.ParseException;
 import javax.swing.JOptionPane;
 import org.hibernate.HibernateException;
 
@@ -101,10 +102,7 @@ public class FormServicos extends javax.swing.JFrame {
 
             }catch(HibernateException ex){
                 JOptionPane.showMessageDialog(rootPane, "Error ao Cadastrar Serviço");
-            }
-            catch(NumberFormatException ex){
-                JOptionPane.showMessageDialog(rootPane, "Valor inválido Verifique e tente novamente!");
-            };
+            }                   
             this.setVisible(false);
         }
         
@@ -117,26 +115,32 @@ public class FormServicos extends javax.swing.JFrame {
         labelNome.setForeground(Color.black);
         labelDescricao.setForeground(Color.black); 
         labelValor.setForeground(Color.black);
-                
-        if ( inputNome.getText().isEmpty() ) {
-            msgErro = msgErro + "Digite seu nome.\n";
-            labelNome.setForeground(Color.red);            
-        }
+        Float valor;
+        try {                
+            if ( inputNome.getText().isEmpty() ) {
+                msgErro = msgErro + "Digite seu nome.\n";
+                labelNome.setForeground(Color.red);            
+            }
+
+            if ( inputDescricao.getText().isEmpty() ) {
+                msgErro = msgErro + "Digite seu Telefone.\n";
+                labelDescricao.setForeground(Color.red);            
+            }
+
+            if ( inputValor.getText().isEmpty() ) {
+                msgErro = msgErro + "Digite o valor do Serviço.\n";
+                labelValor.setForeground(Color.red);            
+            }
+            valor = Float.parseFloat(inputValor.getText());
+            if ( valor < 0 ) {
+                msgErro = msgErro + "Digite um valor Válido";
+                labelValor.setForeground(Color.red);            
+            }        
+        }catch (NumberFormatException e) { 
+                JOptionPane.showMessageDialog(rootPane, "Digite um valor Válido.");
+            } 
         
-        if ( inputDescricao.getText().isEmpty() ) {
-            msgErro = msgErro + "Digite seu Telefone.\n";
-            labelDescricao.setForeground(Color.red);            
-        }
-          
-        if ( inputValor.getText().isEmpty() ) {
-            msgErro = msgErro + "Digite o valor do Serviço.\n";
-            labelValor.setForeground(Color.red);            
-        }
         
-        else if ( Float.parseFloat(inputValor.getText()) < 0 ) {
-            msgErro = msgErro + "Digite um valor Válido";
-            labelValor.setForeground(Color.red);            
-        }
         
         if ( msgErro.isEmpty() ) {
             return true;

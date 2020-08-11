@@ -6,8 +6,13 @@
 package GerenciadorDeInterfaceGrafica;
 
 import GerenciadorDeTarefas.GerenciadorInterfaceGrafica;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
+import Modelos.Cliente;
+import Modelos.Servico;
+import java.text.ParseException;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.hibernate.HibernateException;
 
 
 /**
@@ -25,6 +30,7 @@ public class ProjetoGestaoAcademia extends javax.swing.JFrame {
         initComponents();
         setResizable(false);
         this.gerenciador = gerenciador;
+        preencherTabela(gerenciador.getGerenciador_dominio().listar(Cliente.class));
     }
 
     /**
@@ -81,12 +87,20 @@ public class ProjetoGestaoAcademia extends javax.swing.JFrame {
 
         jTableClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Luiz", "07/07/2020", "pendente"}
+
             },
             new String [] {
-                "Nome", "Ultimo Pagamento", "Status"
+                "id", "Nome", "Serviço"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTableClientes.getTableHeader().setReorderingAllowed(false);
         jTableClientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -95,12 +109,17 @@ public class ProjetoGestaoAcademia extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTableClientes);
         if (jTableClientes.getColumnModel().getColumnCount() > 0) {
-            jTableClientes.getColumnModel().getColumn(0).setMinWidth(300);
-            jTableClientes.getColumnModel().getColumn(1).setResizable(false);
+            jTableClientes.getColumnModel().getColumn(0).setResizable(false);
+            jTableClientes.getColumnModel().getColumn(1).setMinWidth(150);
             jTableClientes.getColumnModel().getColumn(2).setResizable(false);
         }
 
         jButton1.setText("Buscar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Cliente");
 
@@ -208,9 +227,36 @@ public class ProjetoGestaoAcademia extends javax.swing.JFrame {
     }//GEN-LAST:event_jTableClientesMouseClicked
     
     private void jMenuItemPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPagamentoActionPerformed
-       gerenciador.abriarJanelaPagamento();
+        
+        gerenciador.abriarJanelaPagamento(
+                (Cliente)jTableClientes.getModel().getValueAt(jTableClientes.getSelectedRow(), 0),
+                (Servico)jTableClientes.getModel().getValueAt(jTableClientes.getSelectedRow(), 2));
     }//GEN-LAST:event_jMenuItemPagamentoActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        preencherTabela(gerenciador.getGerenciador_dominio().buscarClientesPorNome(jTextFieldValor.getText()));
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void preencherTabela( List<Cliente> clientes){
+        try {
+            List<Cliente> lista = clientes; 
+            // Limpar a tabela
+            ((DefaultTableModel) jTableClientes.getModel()).setRowCount(0);
+            
+            if ( lista.isEmpty() ) {
+                JOptionPane.showMessageDialog(this, "Não existem registros com essa pesquisa.");
+            } else {
+                for ( Cliente cli : lista ){
+                    ((DefaultTableModel) jTableClientes.getModel()).addRow( cli.toArray() );
+                }
+            }
+            
+            
+        } catch ( ParseException | HibernateException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao pesquisar cliente." + ex);
+        }
+    }
      
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

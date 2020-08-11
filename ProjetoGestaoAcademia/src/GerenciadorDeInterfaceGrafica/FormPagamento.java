@@ -6,19 +6,31 @@
 package GerenciadorDeInterfaceGrafica;
 
 import GerenciadorDeTarefas.GerenciadorInterfaceGrafica;
+import Modelos.Cliente;
+import Modelos.Servico;
+import java.awt.Color;
+import javax.swing.JOptionPane;
+import org.hibernate.HibernateException;
 
 /**
  *
  * @author luizn
  */
 public class FormPagamento extends javax.swing.JFrame {
-
-    private GerenciadorInterfaceGrafica gerenciador;
     
-    public FormPagamento(GerenciadorInterfaceGrafica gerenciador) {
+    private GerenciadorInterfaceGrafica gerenciador;    
+    private Cliente cliente;   
+
+
+    
+    public FormPagamento(GerenciadorInterfaceGrafica gerenciador, Cliente cliente, Servico servico) {
         initComponents();
         setResizable(false);
         this.gerenciador = gerenciador;
+        this.cliente = cliente;
+        jTextFieldNomeCliente.setText(cliente.getNome());
+        jTextFieldValor.setText(String.valueOf(servico.getValor()));
+        jTextFieldNomeCliente.setEditable(false);
     }
 
     /**
@@ -42,6 +54,11 @@ public class FormPagamento extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jButton1.setText("Realizar Pagamento");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabelValor.setText("Valor");
 
@@ -96,7 +113,40 @@ public class FormPagamento extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        if (validarCampos()) {
+            try{
+                gerenciador.getGerenciador_dominio().realizarPagamento(cliente);
+                JOptionPane.showMessageDialog(rootPane, "Pagamento realizado com Sucesso!");
+            }
+            catch(HibernateException ex){
+                JOptionPane.showMessageDialog(rootPane, "Erro ao realizar Pagamento!");
+            }        
+            this.setVisible(false);
+        }
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+    
+    private boolean validarCampos() {        
+        String msgErro = "";        
+        jTextFieldValor.setForeground(Color.black); 
+     
+        if ( jTextFieldValor.getText().isEmpty() ) {
+            msgErro = msgErro + "Digite o valor do pagamento.\n";
+            jTextFieldValor.setForeground(Color.red);            
+        }
+        
+        if ( msgErro.isEmpty() ) {
+            return true;
+        } else {            
+            JOptionPane.showMessageDialog(this, msgErro, "Erro ao realizar Pagamento!", JOptionPane.ERROR_MESSAGE  );
+            return false;
+        }
+        
+    }
 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabelNomeCliente;

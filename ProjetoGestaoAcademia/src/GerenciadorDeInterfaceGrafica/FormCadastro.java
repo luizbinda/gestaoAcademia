@@ -108,25 +108,22 @@ public class FormCadastro extends javax.swing.JFrame {
                         InputTelefone.getText(), 
                         (Servico) ComboServico.getSelectedItem()
                 );
-                InputCPF.setText("");
-                InputNome.setText(""); 
-                InputTelefone.setText("");
                 JOptionPane.showMessageDialog(rootPane, "Cliente Cadastrado com Sucesso!");
             }catch(HibernateException ex){
                 JOptionPane.showMessageDialog(rootPane, "Error ao Cadastrar Cliente");
-            }        
+            }     
+            InputCPF.setText("");
+            InputNome.setText(""); 
+            InputTelefone.setText("");
             this.setVisible(false);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private boolean validarCampos() {
-        
-        String msgErro = "";
-        
+    private boolean validarCampos() {        
+        String msgErro = "";        
         labelNome.setForeground(Color.black);
         labelCPF.setForeground(Color.black); 
-        labelTelefone.setForeground(Color.black);
-                
+        labelTelefone.setForeground(Color.black);                
         if ( InputNome.getText().isEmpty() ) {
             msgErro = msgErro + "Digite seu nome.\n";
             labelNome.setForeground(Color.red);            
@@ -153,8 +150,7 @@ public class FormCadastro extends javax.swing.JFrame {
         } else {            
             JOptionPane.showMessageDialog(this, msgErro, "ERRO Cliente", JOptionPane.ERROR_MESSAGE  );
             return false;
-        }
-        
+        }  
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox ComboServico;

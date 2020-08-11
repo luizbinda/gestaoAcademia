@@ -6,6 +6,7 @@
 package Modelos;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import javax.persistence.*;
 
 /**
@@ -82,7 +83,14 @@ public class Cliente implements Serializable {
         this.servico = servico;
     }
     
+    public Object[] toArray() throws ParseException {
+        return new Object[] { this, nome, servico};
+    }
     
+    @Override
+    public String toString() {
+        return String.valueOf(id);
+    }
     
     
 

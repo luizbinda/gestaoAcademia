@@ -9,6 +9,8 @@ import GerenciadorDeInterfaceGrafica.FormCadastro;
 import GerenciadorDeInterfaceGrafica.FormPagamento;
 import GerenciadorDeInterfaceGrafica.FormServicos;
 import GerenciadorDeInterfaceGrafica.ProjetoGestaoAcademia;
+import Modelos.Cliente;
+import Modelos.Servico;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -67,9 +69,9 @@ public class GerenciadorInterfaceGrafica {
         }
     }
      
-    public void abriarJanelaPagamento() {       
+    public void abriarJanelaPagamento(Cliente cliente, Servico servico) {       
         if(this.pagamento == null ){
-            this.pagamento = new FormPagamento(this);
+            this.pagamento = new FormPagamento(this, cliente, servico);
             this.pagamento.setDefaultCloseOperation(HIDE_ON_CLOSE);
             this.pagamento.setVisible(true);
         }
